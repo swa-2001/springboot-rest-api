@@ -27,9 +27,13 @@ public class EmployeeService {
         return repo.findById(id).orElse(null);
     }
 
+//    public Employee getByName(String name) {
+//        return repo.findByName(name);
+//    }
+    
     public Employee save(Employee emp) {
         return repo.save(emp);         //repo extends JpaRepository which converts thsi into sql query
-    }                                  //INSERT INTO employee (name, department, salary) VALUES (...);
+    }                                  ////INSERT INTO employee (name, department, salary) VALUES (...);
 
     public Employee update(Long id, Employee newEmp) {
         Employee e = repo.findById(id).orElse(null);
@@ -46,4 +50,8 @@ public class EmployeeService {
         repo.deleteById(id);
         return "Employee deleted";
     }
+
+	public Employee getByName(String name) {
+		return repo.findByName(name);
+	}
 }

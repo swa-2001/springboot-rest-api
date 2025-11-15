@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee App</title>
+</head>
+<body>
+    <h2>Employee Management (Simple Frontend)</h2>
+
+    <hr>
+    <h3>Get All Employees</h3>
+    <button onclick="getAll()">Get Employees</button>
+    <pre id="outputAll"></pre>
+
+    <hr>
+    <h3>Get Employee by ID</h3>
+    <input type="number" id="empId" placeholder="Enter Employee ID">
+    <button onclick="getById()">Search</button>
+    <pre id="outputId"></pre>
+
+    <hr>
+    <h3>Get Employee by Name</h3>
+    <input type="text" id="empName" placeholder="Enter Name">
+    <button onclick="getByName()">Search</button>
+    <pre id="outputName"></pre>
+
+    <hr>
+    <h3>Create Employee</h3>
+    <input type="text" id="newName" placeholder="Name">
+    <input type="text" id="newRole" placeholder="Role">
+	<input tyep="text" id="salary"  placeholder="Salary">
+    <button onclick="createEmployee()">Create</button>
+    <pre id="outputCreate"></pre>
+
+    <hr>
+    <h3>Delete Employee</h3>
+    <input type="number" id="deleteId" placeholder="Enter ID">
+    <button onclick="deleteEmployee()">Delete</button>
+    <pre id="outputDelete"></pre>
+
+<script>
+    const BASE_URL = "http://localhost:8080/employees";
+
+    function getAll() {
+        fetch(BASE_URL)
+            .then(res => res.json())
+            .then(data => document.getElementById("outputAll").innerText = JSON.stringify(data, null, 2));
+    }
+
+    function getById() {
+        let id = document.getElementById("empId").value;
+        fetch(`${BASE_URL}/${id}`)
+            .then(res => res.json())
+            .then(data => document.getElementById("outputId").innerText = JSON.stringify(data, null, 2))
+            .catch(err => alert("Employee not found"));
+    }
+
+    function getByName() {
+        let name = document.getElementById("empName").value;
+        fetch(`${BASE_URL}/name/${name}`)
+            .then(res => res.json())
+            .then(data => document.getElementById("outputName").innerText = JSON.stringify(data, null, 2))
+            .catch(err => alert("Employee not found"));
+    }
+
+    function createEmployee() {
+        let emp = {
+            name: document.getElementById("newName").value,
+            department: document.getElementById("newRole").value,
+			salary: document.getElementById("salary").value
+        };
+
+        fetch(BASE_URL, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(emp)
+        })
+        .then(res => res.json())
+        .then(data => document.getElementById("outputCreate").innerText = "Employee Created: \n" + JSON.stringify(data, null, 2));
+    }
+
+    function deleteEmployee() {
+        let id = document.getElementById("deleteId").value;
+
+        fetch(`${BASE_URL}/${id}`, { method: "DELETE" })
+            .then(() => document.getElementById("outputDelete").innerText = "Deleted successfully")
+            .catch(() => alert("Error deleting employee"));
+    }
+</script>
+
+</body>
+</html>

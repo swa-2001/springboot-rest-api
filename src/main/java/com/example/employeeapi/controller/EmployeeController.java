@@ -41,4 +41,9 @@ public class EmployeeController {
     public String delete(@PathVariable Long id) {
         return service.delete(id);
     }
+    
+    @GetMapping("/name/{name}")
+    public Employee getOne(@PathVariable String name) {
+        return service.getByName(name);
+    }
 }
