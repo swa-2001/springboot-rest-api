@@ -2,6 +2,8 @@ package com.example.employeeapi.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.employeeapi.model.Employee;
@@ -24,6 +26,9 @@ public class EmployeeController {
 
     @GetMapping("/{id}")
     public Employee getOne(@PathVariable Long id) {
+    	if (id <= 0) {
+            throw new IllegalArgumentException("Invalid ID!");
+        }
         return service.getById(id);
     }
 
@@ -44,6 +49,13 @@ public class EmployeeController {
     
     @GetMapping("/name/{name}")
     public Employee getOne(@PathVariable String name) {
+    	if(name.isEmpty()) {
+    		 throw new IllegalArgumentException("Name is empty");
+    	}
         return service.getByName(name);
+    }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleInvalidId(IllegalArgumentException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
